@@ -4,6 +4,7 @@
 include ../../checks.mk
 
 # Give this service a name, version number, and pattern name
+DOCKER_HUB_ID ?= "ibmosquito"
 SERVICE_NAME:="cuda"
 SERVICE_VERSION:="1.1.0"
 PATTERN_NAME:="pattern-cuda"
@@ -18,7 +19,7 @@ CONTAINER_CREDS:=
 build: check-dockerhubid
 	@echo "Building the CUDA plugin for NVIDIA hardware (NOTE: not for ARM32)"
 	@if [ "${ARCH}" != "arm" ]; then \
-	  docker build -t $(DOCKERHUB_ID)/$(SERVICE_NAME)_$(ARCH):$(SERVICE_VERSION) -f ./Dockerfile.$(ARCH) .; \
+	  docker build -t $(DOCKER_HUB_ID)/$(SERVICE_NAME)_$(ARCH):$(SERVICE_VERSION) -f ./Dockerfile.$(ARCH) .; \
         fi
 
 run: check-dockerhubid
@@ -29,7 +30,7 @@ run: check-dockerhubid
           -p 127.0.0.1:5252:80 \
           --name $(SERVICE_NAME) \
           --network mqtt-net --network-alias $(SERVICE_NAME) \
-          $(DOCKERHUB_ID)/$(SERVICE_NAME)_$(ARCH):$(SERVICE_VERSION)
+          $(DOCKER_HUB_ID)/$(SERVICE_NAME)_$(ARCH):$(SERVICE_VERSION)
 	docker network connect cam-net $(SERVICE_NAME) --alias $(SERVICE_NAME)
 	docker start $(SERVICE_NAME)
 
@@ -41,7 +42,7 @@ dev: check-dockerhubid
           -p 127.0.0.1:5252:80 \
           --name $(SERVICE_NAME) \
           --network mqtt-net --network-alias $(SERVICE_NAME) \
-          $(DOCKERHUB_ID)/$(SERVICE_NAME)_$(ARCH):$(SERVICE_VERSION) /bin/bash
+          $(DOCKER_HUB_ID)/$(SERVICE_NAME)_$(ARCH):$(SERVICE_VERSION) /bin/bash
 	docker network connect cam-net $(SERVICE_NAME) --alias $(SERVICE_NAME)
 	docker start -ia $(SERVICE_NAME)
 
@@ -50,13 +51,13 @@ stop: check-dockerhubid
 
 clean: check-dockerhubid
 	-docker rm -f ${SERVICE_NAME} 2>/dev/null || :
-	-docker rmi $(DOCKERHUB_ID)/$(SERVICE_NAME)_$(ARCH):$(SERVICE_VERSION) 2>/dev/null || :
+	-docker rmi $(DOCKER_HUB_ID)/$(SERVICE_NAME)_$(ARCH):$(SERVICE_VERSION) 2>/dev/null || :
 
 publish-service:
 	@ARCH=$(ARCH) \
 	    SERVICE_NAME="$(SERVICE_NAME)" \
 	    SERVICE_VERSION="$(SERVICE_VERSION)"\
-	    SERVICE_CONTAINER="$(DOCKERHUB_ID)/$(SERVICE_NAME)_$(ARCH):$(SERVICE_VERSION)" \
+	    SERVICE_CONTAINER="$(DOCKER_HUB_ID)/$(SERVICE_NAME)_$(ARCH):$(SERVICE_VERSION)" \
 	    hzn exchange service publish -O $(CONTAINER_CREDS) -P -f service.json --public=true
 
 publish-pattern:
