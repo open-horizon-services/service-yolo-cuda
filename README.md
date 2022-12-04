@@ -32,7 +32,7 @@ cd catkin_workspace/src
 git clone --recursive git@github.com:leggedrobotics/darknet_ros.git
 cd ../
 ```
-**Note:** Make sure you have the --recursive tag when cloning the darknet_ros repo.
+> **Note** Make sure you have the --recursive tag when cloning the darknet_ros repo.
 
 Build by setting
 
@@ -63,4 +63,25 @@ source devel/setup.bash
 roslaunch darknet_ros darknet_ros.launch
 ```
 After launching the ROS node, a window will automatically appear that will show the RGB stream and detected objects. You can also check the stream in [RVIZ](http://wiki.ros.org/rviz).
+
+## Usage
+
+To have YOLO ROS: Real-Time Object Detection for ROS to run with the desired robot, a few parameters must be adapted. It is simplest if you duplicate and adapt
+all the parameter files that you need change from the `darknet_ros` repo package; specifically the parameter files in `config` and and the launch file from `launch`
+folder. 
+
+## Advanced Details
+
+### All Makefile targets
+
+* `run` - manually run the container locally as a test
+* `stop` - halt a locally-run container
+* `dev` - manually run locally and connect to a terminal in the container
+* `clean` - remove the container image and docker volume
+* `build` - build the container
+* `publish-service` - Publish the service definition file to the hub in your organization
+* `publish-pattern` - Publish the pattern definition file to the hub in your organization
+* `agent-run` - register your agent's [node policy](https://github.com/open-horizon/examples/blob/master/edge/services/helloworld/PolicyRegister.md#node-policy) with the hub
+* `agent-stop` - unregister your agent with the hub, halting all agreements and stopping containers
+
 > // Work in progress
