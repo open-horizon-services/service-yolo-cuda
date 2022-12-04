@@ -83,5 +83,3 @@ folder.
 * `publish-pattern` - Publish the pattern definition file to the hub in your organization
 * `agent-run` - register your agent's [node policy](https://github.com/open-horizon/examples/blob/master/edge/services/helloworld/PolicyRegister.md#node-policy) with the hub
 * `agent-stop` - unregister your agent with the hub, halting all agreements and stopping containers
-
-> // Work in progress
